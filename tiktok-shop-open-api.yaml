@@ -3,10 +3,6 @@ info:
   title: TikTok Shop API Integration
   description: OpenAPI specification for TikTok Shop API including authorization, token management, shop and product management, and order processing.
   version: 1.0.1
-  contact:
-    name: API Support
-    url: 'https://www.tiktok.com/support'
-    email: api-support@tiktok.com
 servers:
   - url: 'https://services.tiktokshop.com'
     description: Base URL for non-US services
