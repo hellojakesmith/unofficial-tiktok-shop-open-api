@@ -3,13 +3,10 @@ info:
   title: TikTok Shop API Integration
   description: OpenAPI specification for TikTok Shop API including authorization, token management, shop and product management, and order processing.
   version: 1.0.1
+  contact:
+    name: API Support
+    url: 'https://partner.tiktokshop.com/docv2/page/64ec52c993f5dc028ee91e4c'
 servers:
-  - url: 'https://services.tiktokshop.com'
-    description: Base URL for non-US services
-  - url: 'https://services.us.tiktokshop.com'
-    description: Base URL for US services
-  - url: 'https://auth.tiktok-shops.com'
-    description: Authentication server for token operations
   - url: 'https://open-api.tiktokglobalshop.com'
     description: Global API server for shop and product operations
 paths:
@@ -6423,16 +6420,29 @@ components:
       properties:
         id:
           type: string
+          example: "576461413038785752"
+          description: "Unique identifier of the order."
         cancellation_initiator:
           type: string
+          enum: [BUYER, SELLER, SYSTEM]
+          description: "Who initiated the order cancellation."
         shipping_provider:
           type: string
+          example: "TT Virtual express"
+          description: "Name of the shipping provider."
         shipping_provider_id:
           type: string
+          example: "6617675021119438849"
+          description: "Identifier for the shipping provider."
         create_time:
           type: integer
+          format: int64
+          example: 1619611561
+          description: "Unix timestamp of when the order was created."
         status:
           type: string
+          enum: [UNPAID, ON_HOLD, PARTIALLY_SHIPPING, AWAITING_SHIPMENT, AWAITING_COLLECTION, IN_TRANSIT, DELIVERED, COMPLETED, CANCELLED]
+          description: "Current status of the order."
         payment:
           $ref: '#/components/schemas/PaymentDetail'
         recipient_address:
@@ -6441,60 +6451,315 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/LineItem'
+          description: "List of line items included in the order."
         fulfillment_type:
           type: string
+          enum: [FULFILLMENT_BY_SELLER, FULFILLMENT_BY_TIKTOK]
+          description: "Method by which the order is fulfilled."
         tracking_number:
           type: string
+          example: "JX12345"
+          description: "Tracking number for the order's shipment."
         paid_time:
           type: integer
+          format: int64
+          example: 1619611563
+          description: "Unix timestamp of when the order was paid."
         seller_note:
           type: string
+          example: "seller note"
+          description: "Additional notes from the seller about the order."
         packages:
           type: array
           items:
             $ref: '#/components/schemas/PackageDetail'
+        rts_time:
+          type: integer
+          format: int64
+          example: 1619611563
+          description: "Unix timestamp for when the sellers shipped the order."
+        is_on_hold_order:
+          type: boolean
+          example: false
+          description: "True if the order is on hold."
+        is_replacement_order:
+          type: boolean
+          example: false
+          description: "True if this is a replacement order."
+        is_buyer_request_cancel:
+          type: boolean
+          example: false
+          description: "True if there is a pending cancellation request from the buyer."
+        is_cod:
+          type: boolean
+          example: false
+          description: "True if cash on delivery is applicable."
+        is_sample_order:
+          type: boolean
+          example: false
+          description: "True if the order is a sample order."
+        shipping_due_time:
+          type: integer
+          format: int64
+          example: 1678389618
+          description: "Unix timestamp by which the order should update its status to AWAITING_COLLECTION or it will be canceled."
+        cancel_order_sla_time:
+          type: integer
+          format: int64
+          example: 1619621355
+          description: "Unix timestamp for the automatic cancellation time for orders specified by the platform."
+        delivery_option_required_delivery_time:
+          type: integer
+          format: int64
+          example: 1678389618
+          description: "Unix timestamp by which the order should be delivered."
+        collection_due_time:
+          type: integer
+          format: int64
+          example: 1678389618
+          description: "Unix timestamp by which the order should update its status to IN_TRANSIT or it will be canceled."
+        delivery_due_time:
+          type: integer
+          format: int64
+          example: 1678389618
+          description: "Unix timestamp by which the order should update its status to DELIVERED or it will be canceled."
+        cancel_reason:
+          type: string
+          example: "Pricing error"
+          description: "Reason for order cancellation."
+        delivery_option_id:
+          type: string
+          example: "7091146663229654785"
+          description: "Identifier for the delivery option selected."
+        delivery_option_name:
+          type: string
+          example: "Express shipping"
+          description: "Name of the delivery option selected for display purposes."
+        payment_method_name:
+          type: string
+          example: "CCDC"
+          description: "Name of the payment method used, for display purposes only."
+        split_or_combine_tag:
+          type: string
+          enum: [COMBINED, SPLIT]
+          description: "Indicates whether the order is combined or split."
+        shipping_type:
+          type: string
+          enum: [TIKTOK, SELLER]
+          description: "Method of delivery, either provided by TikTok or the seller."
+        cpf:
+          type: string
+          example: "3213-31231412"
+          description: "CPF (invoice number), used to issue an invoice in Brazil."
+        update_time:
+          type: integer
+          format: int64
+          example: 1619621355
+          description: "Unix timestamp of the last update to the order's status."
+        need_upload_invoice:
+          type: string
+          enum: [NEED_INVOICE, NO_NEED]
+          description: "Indicates if an invoice needs to be uploaded."
+        replaced_order_id:
+          type: string
+          example: "576461416728782174"
+          description: "The ID of the original order this one replaces, if applicable."
+        buyer_message:
+          type: string
+          example: "Please ship asap!"
+          description: "A message from the buyer."
+        user_id:
+          type: string
+          example: "7021436810468230477"
+          description: "Buyer's user ID."
+        warehouse_id:
+          type: string
+          example: "6955005333819123123"
+          description: "Identifier for the seller's warehouse."
+        rts_sla_time:
+          type: integer
+          format: int64
+          example: 1619611688
+          description: "The latest shipping time specified by the platform."
+        tts_sla_time:
+          type: integer
+          format: int64
+          example: 1619611761
+          description: "The latest collection time specified by the platform."
+        has_updated_recipient_address:
+          type: boolean
+          example: true
+          description: "True if the recipient address has been updated."
+        request_cancel_time:
+          type: integer
+          format: int64
+          example: 1678389618
+          description: "Unix timestamp of when the buyer requested cancellation."
+        address_line1:
+          type: string
+          example: "TikTok 5800 bristol Pkwy"
+          description: "The first line of the street address."
+        address_line2:
+          type: string
+          example: "Suite 100"
+          description: "The second line of the street address."
+        address_line3:
+          type: string
+          example: ""
+          description: "The third line of the street address, usually only for the Brazilian market."
+        address_line4:
+          type: string
+          example: ""
+          description: "The fourth line of the street address, usually only for the Brazilian market."
+        region_code:
+          type: string
+          example: "US"
+          description: "Region code of the address."
+        address_detail:
+          type: string
+          example: "Unit one building 8"
+          description: "Full detail of the buyer's address."
+        postal_code:
+          type: string
+          example: "95110"
+          description: "The postal code that can be used by seller for shipping."
+        district_info:
+          type: array
+          items:
+            $ref: '#/components/schemas/DistrictInfo'
+          description: "List of district information."
+        delivery_preferences:
+          type: object
+          properties:
+            drop_off_location:
+              type: string
+              example: "Front Door"
+              description: "Drop-off location selected by the buyer."
+        retail_delivery_fee:
+          type: string
+          example: "1.28"
+          description: "Retail delivery fee, applicable only in certain markets."
+        product_tax:
+          type: string
+          example: "21.3"
+          description: "Tax on the total item price."
+        shipping_fee_tax:
+          type: string
+          example: "11"
+          description: "Tax on the shipping price."
+        small_order_fee:
+          type: string
+          example: "3000"
+          description: "Small order fee, applicable in certain markets when order amount is below minimum spending amount."
+        original_total_product_price:
+          type: string
+          example: "5000"
+          description: "Total original price of products, VAT included for cross-border shops."
+        original_shipping_fee:
+          type: string
+          example: "5000"
+          description: "Shipping fee before any discounts."
+        shipping_fee_seller_discount:
+          type: string
+          example: "5000"
+          description: "Discount on the shipping fee provided by the seller."
+        shipping_fee_platform_discount:
+          type: string
+          example: "5000"
+          description: "Discount on the shipping fee provided by the platform."
+    DistrictInfo:
+      type: object
+      properties:
+        address_level_name:
+          type: string
+          example: "Country"
+          description: "Level of the address, e.g., country, state, city."
+        address_name:
+          type: string
+          example: "United Kingdom"
+          description: "Name of the address area, e.g., country name, state name."
+        address_level:
+          type: string
+          example: "L0"
+          description: "Hierarchical level of the address within the administrative division."
     PaymentDetail:
       type: object
       properties:
         currency:
           type: string
+          example: "IDR"
+          description: "Currency used for the payment."
         sub_total:
           type: string
+          example: "5000"
+          description: "Subtotal amount paid by the buyer."
         shipping_fee:
           type: string
+          example: "5000"
+          description: "Total shipping fee paid by the buyer."
         total_amount:
           type: string
+          example: "5000"
+          description: "Total amount paid by the buyer."
         tax:
           type: string
+          example: "5000"
+          description: "Total taxes paid by the buyer."
         original_total_product_price:
           type: string
+          example: "5000"
+          description: "Original total product price before any discounts."
         original_shipping_fee:
           type: string
+          example: "5000"
+          description: "Original shipping fee before any discounts."
         seller_discount:
           type: string
+          example: "5000"
+          description: "Discount provided by the seller on the total product price."
         platform_discount:
           type: string
+          example: "5000"
+          description: "Discount provided by the platform on the total product price."
         shipping_fee_tax:
           type: string
+          example: "11"
+          description: "Tax applied on the shipping fee."
         product_tax:
           type: string
+          example: "21.3"
+          description: "Tax applied on the product price."
         retail_delivery_fee:
           type: string
+          example: "1.28"
+          description: "Additional delivery fee applied in some retail contexts."
     RecipientAddress:
       type: object
       properties:
         full_address:
           type: string
+          example: "1199 Coleman Ave San Jose, CA 95110"
+          description: "Complete address of the recipient."
         phone_number:
           type: string
+          example: "(+1)213-***-1234"
+          description: "Phone number of the recipient, desensitized if using platform logistics."
         name:
           type: string
+          example: "Zay"
+          description: "Name of the recipient, desensitized if using platform logistics."
         postal_code:
           type: string
+          example: "95110"
+          description: "Postal code of the recipient's address."
         address_line1:
           type: string
+          example: "TikTok 5800 bristol Pkwy"
+          description: "First line of the street address."
         address_line2:
           type: string
+          example: "Suite 100"
+          description: "Second line of the street address."
         district_info:
           type: array
           items:
@@ -6504,42 +6769,107 @@ components:
       properties:
         id:
           type: string
+          example: "577086512123755123"
+          description: "Unique identifier for the line item."
         sku_id:
           type: string
+          example: "2729382476852921560"
+          description: "Stock Keeping Unit identifier."
+        combined_listing_skus:
+          type: array
+          items:
+            $ref: '#/components/schemas/CombinedListingSKU'
+          description: "Details of SKUs combined into this listing."
         product_id:
           type: string
+          example: "1729582718312380123"
+          description: "Identifier for the product."
         product_name:
           type: string
+          example: "Women's Winter Crochet Clothes"
+          description: "Name of the product."
         sku_name:
           type: string
+          example: "Iphone"
+          description: "Name of the SKU, combined by product attributes like size or color."
         original_price:
           type: string
+          example: "0.01"
+          description: "Original price of the SKU."
         sale_price:
           type: string
+          example: "0.01"
+          description: "Sale price of the SKU."
         platform_discount:
           type: string
+          example: "0"
+          description: "Discount provided by the platform on this SKU."
         seller_discount:
           type: string
+          example: "0"
+          description: "Discount provided by the seller on this SKU."
         sku_image:
           type: string
+          example: "https://p16-oec-va.itexeitg.com/tos-maliva-d-o5syd03w52-us/46123e87d14f40b69b839"
+          description: "Image URL for the SKU."
+        sku_type:
+          type: string
+          enum: [NORMAL, PRE_ORDER, ZERO_LOTTERY, SHOP_PARTNER]
+          description: "Type of SKU, indicating stock status or special types like pre-orders."
+        is_gift:
+          type: boolean
+          example: false
+          description: "True if the line item is marked as a gift."
+        item_tax:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemTax'
+          description: "Tax details applicable to the line item."
+    CombinedListingSKU:
+      type: object
+      properties:
+        sku_id:
+          type: string
+          example: "2729382476852921123"
+          description: "SKU ID of the component in the combined listing."
+        product_id:
+          type: string
+          example: "1729582718312380456"
+          description: "Product ID associated with the SKU."
+        sku_count:
+          type: integer
+          example: 1
+          description: "Quantity of the original SKU that compose the combined listing."
     PackageDetail:
       type: object
       properties:
         id:
           type: string
+          example: "1152321127278713123"
+          description: "Unique identifier for the package."
         tracking_number:
           type: string
+          example: "JX12345"
+          description: "Tracking number assigned to the package."
         status:
           type: string
-    DistrictInfo:
+          enum: [TO_FULFILL, PROCESSING, FULFILLING, COMPLETED, CANCELLED]
+          description: "Current status of the package."
+    ItemTax:
       type: object
       properties:
-        address_level_name:
+        tax_type:
           type: string
-        address_name:
+          enum: [SALES_TAX]
+          description: "Type of tax applied to the item."
+        tax_amount:
           type: string
-        address_level:
+          example: "21.2"
+          description: "Amount of tax applied."
+        tax_rate:
           type: string
+          example: "0.35"
+          description: "Rate of the tax applied."
     SearchPackageResponse:
       type: object
       properties:
